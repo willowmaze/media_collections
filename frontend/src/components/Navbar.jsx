@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
 import { useAuth } from './AuthContext';
 import { pictureBaseUrl } from '../api';
+import { NavigationMenu, NavigationMenuList, NavigationMenuItem } from "@/components/ui/navigation-menu";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
     const { user, logout } = useAuth();
@@ -14,41 +17,47 @@ const Navbar = () => {
         return `${pictureBaseUrl}${url}`;
     };
 
-
     return (
-        <nav className="navbar">
-            <div className="navbar-container">
-                <Link to="/" className="link-without-line">
-                    <div className="logo">Media Collections</div>
-                </Link>
+        <NavigationMenu className="w-full max-w-full border-b border-border px-6 py-3">
+            <NavigationMenuList className="w-full flex items-center gap-4">
+                <NavigationMenuItem>
+                    <Link to="/" className="font-bold tracking-tight text-lg">
+                        Media Collections
+                    </Link>
+                </NavigationMenuItem>
 
-                <div className="nav-menu">
-                    <ThemeToggle />
-
-                    {user ? (
-                        <div className="user-profile">
-                            <Link to="/profile" className="login-link">{user.username ? user.username : "Аноним"}</Link>
-                            <Link to="/profile" className="link-without-line">
-                              {user.avatar_url ? (
-                                <img src={getAvatarSrc(user.avatar_url)} alt="Avatar" className="avatar" />
-                              ) : (
-                                <div className="avatar">
-                                    {user.username ? user.username[0].toUpperCase() : user.email[0].toUpperCase()}
-                                </div>
-                              )}
-                            </Link>
-
-                            <button onClick={logout} className="btn-create">Выйти</button>
-                        </div>
-                    ) : (
-                        <nav style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                            <Link to="/login" className="login-link">Войти</Link>
-                            <Link to="/register" className="btn-create" style={{padding: '8px 15px'}}>Регистрация</Link>
-                        </nav>
-                    )}
-                </div>
-            </div>
-        </nav>
+                <div className="flex-grow" />
+                    <NavigationMenuItem>
+                        <ThemeToggle />
+                    </NavigationMenuItem>
+                        {user ? (
+                            <>
+                                <NavigationMenuItem>
+                                    <Link to="/profile">{user.username ? user.username : "Аноним"}</Link>
+                                </NavigationMenuItem>
+                                <NavigationMenuItem>
+                                <Avatar size="lg" className="bg-popover flex justify-center">
+                                    {user.avatar_url ? (
+                                        <AvatarImage src={getAvatarSrc(user.avatar_url)}  alt="Avatar" />
+                                        ) : (
+                                            <span className="text-2xl font-bold text-muted-foreground/80 tracking-tight">
+                                                {user.username ? user.username[0].toUpperCase() : "A"}
+                                            </span>
+                                    )}
+                                </Avatar>
+                                </NavigationMenuItem>
+                                <NavigationMenuItem>
+                                    <Button onClick={logout}>Выйти</Button>
+                                </NavigationMenuItem>
+                            </>
+                        ) : (
+                            <>
+                            <NavigationMenuItem><Link to="/login">Войти</Link></NavigationMenuItem>
+                            <NavigationMenuItem><Link to="/register">Регистрация</Link></NavigationMenuItem>
+                            </>
+                        )}
+            </NavigationMenuList>
+        </NavigationMenu>
     );
 };
 

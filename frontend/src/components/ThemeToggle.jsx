@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Button } from "@/components/ui/button";
 
 const ThemeToggle = () => {
     const [isLight, setIsLight] = useState(false);
@@ -9,16 +10,16 @@ const ThemeToggle = () => {
 
     useEffect(() => {
         if (isLight) {
-            document.body.classList.add('light-theme');
+            document.body.classList.add('light');
         } else {
-            document.body.classList.remove('light-theme');
+            document.body.classList.remove('light');
         }
     }, [isLight]);
 
     return (
-        <button onClick={toggleTheme} className="theme-toggle-button">
+        <Button onClick={toggleTheme} className="theme-toggle-button">
             {isLight ? 'Темная тема' : 'Светлая тема'}
-        </button>
+        </Button>
     );
 };
 

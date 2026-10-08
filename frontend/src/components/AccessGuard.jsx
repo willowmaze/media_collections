@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import api from '../api';
-import { Forbidden } from './Errors';
+import { Forbidden, LoadingScreen } from './Errors';
+
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 const AccessGuard = ({ collectionId, children }) => {
     const [searchParams] = useSearchParams();
@@ -23,12 +25,6 @@ const AccessGuard = ({ collectionId, children }) => {
             } catch (err) {
                 const data = err.response?.data;
                 const detail = data?.detail;
-
-//                 if (detail === "PUBLIC_ACCESS") {
-//                     setStatus("granted");
-//                     return;
-//                 }
-
                 if (detail === "PASSWORD_REQUIRED" || detail === "INVALID_PASSWORD") {
                     setStatus("password_required");
                     if (detail === "INVALID_PASSWORD") setError("Неверный пароль");
@@ -55,12 +51,12 @@ const AccessGuard = ({ collectionId, children }) => {
         tryJoin(password);
     };
 
-    if (status === 'loading') return <div className="error-title">Загрузка...</div>;
+    if (status === 'loading') return <LoadingScreen></LoadingScreen>;
     if (status === 'forbidden') return <Forbidden></Forbidden>;
     if (status === 'granted') return children;
 
     return (
-        <div className="access-container">
+        <div>
             {status === 'password_required' ? (
                 <form className="access-view" onSubmit={handlePasswordSubmit}>
                     <h1>Требуется пароль</h1>
